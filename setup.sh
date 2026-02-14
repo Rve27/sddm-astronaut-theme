@@ -122,7 +122,7 @@ install_deps() {
 clone_repo() {
     if [[ -d "$PATH_TO_GIT_CLONE" ]]; then
         if confirm "Repository already exists. Re-clone?"; then
-            mv "$PATH_TO_GIT_CLONE" "${PATH_TO_GIT_CLONE}_$DATE"
+            rm -rf "$PATH_TO_GIT_CLONE"
             spin "Cloning repository..." git clone -b "$THEME_BRANCH" "$THEME_REPO" "$PATH_TO_GIT_CLONE"
             info "Repository cloned to $PATH_TO_GIT_CLONE"
         else
