@@ -119,9 +119,18 @@ install_deps() {
 
 # Clone repository
 clone_repo() {
-    [[ -d "$PATH_TO_GIT_CLONE" ]] && mv "$PATH_TO_GIT_CLONE" "${PATH_TO_GIT_CLONE}_$DATE"
-    spin "Cloning repository..." git clone -b master --depth 1 "$THEME_REPO" "$PATH_TO_GIT_CLONE"
-    info "Repository cloned to $PATH_TO_GIT_CLONE"
+    if [[ -d "$PATH_TO_GIT_CLONE" ]]; then
+        if confirm "Repository already exists. Re-clone?"; then
+            mv "$PATH_TO_GIT_CLONE" "${PATH_TO_GIT_CLONE}_$DATE"
+            spin "Cloning repository..." git clone -b master --depth 1 "$THEME_REPO" "$PATH_TO_GIT_CLONE"
+            info "Repository cloned to $PATH_TO_GIT_CLONE"
+        else
+            info "Using existing repository at $PATH_TO_GIT_CLONE"
+        fi
+    else
+        spin "Cloning repository..." git clone -b master --depth 1 "$THEME_REPO" "$PATH_TO_GIT_CLONE"
+        info "Repository cloned to $PATH_TO_GIT_CLONE"
+    fi
 }
 
 # Install theme
