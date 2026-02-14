@@ -181,22 +181,20 @@ enable_sddm() {
 
 preview_theme(){
     local log_file="/tmp/${THEME_NAME}_$DATE.txt"
-    
+
     sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sddm-astronaut-theme/ > $log_file 2>&1 &
     greeter_pid=$!
 
-    # wait for ten seconds
-    for i in {1..10}; do
-        if ! kill -0 "$greeter_pid" 2>/dev/null; then
-            break
-        fi
-        sleep 1
+    info "Close the preview window to stop..."
+
+    # Wait for process exit (user closes the window)
+    while kill -0 "$greeter_pid" 2>/dev/null; do
+        sleep 0.5
     done
 
     if kill -0 "$greeter_pid" 2>/dev/null; then
         kill "$greeter_pid"
     fi
-
 
     local theme="$(sed -n 's|^ConfigFile=Themes/\(.*\)\.conf|\1|p' $METADATA)"
     info "Preview closed ($theme theme found)." 
